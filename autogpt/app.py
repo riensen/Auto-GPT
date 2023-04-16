@@ -25,6 +25,7 @@ from autogpt.speech import say_text
 from autogpt.commands.web_selenium import browse_website
 from autogpt.commands.git_operations import clone_repository
 from autogpt.commands.twitter import send_tweet
+from autogpt.commands.email import send_email
 
 
 CFG = Config()
@@ -194,6 +195,8 @@ def execute_command(command_name: str, arguments):
             return generate_image(arguments["prompt"])
         elif command_name == "send_tweet":
             return send_tweet(arguments["text"])
+        elif command_name == "send_email":
+            return send_email(arguments["recipient"],arguments["subject"],arguments["message"])
         elif command_name == "do_nothing":
             return "No action performed."
         elif command_name == "task_complete":
