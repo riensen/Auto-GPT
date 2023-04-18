@@ -92,6 +92,11 @@ def get_prompt() -> str:
             "Send Email",
             "send_email",
             {"recipient": "<recipient>", "subject": "<subject>", "message": "<message>"}
+        ),
+        (
+            "Read Emails",
+            "read_emails",
+            {"imap_folder": "<imap_folder>", "imap_search_command": "<imap_search_criteria_command>"}
         )
     ]
 

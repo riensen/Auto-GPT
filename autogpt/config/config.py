@@ -64,6 +64,7 @@ class Config(metaclass=Singleton):
         self.email_smtp_host = os.getenv("EMAIL_SMTP_HOST")
         self.email_smtp_port = os.getenv("EMAIL_SMTP_PORT")
         self.email_imap_server = os.getenv("EMAIL_IMAP_SERVER")
+        self.email_mark_as_read = os.getenv("EMAIL_MARK_AS_READ")
         
         self.google_api_key = os.getenv("GOOGLE_API_KEY")
         self.custom_search_engine_id = os.getenv("CUSTOM_SEARCH_ENGINE_ID")

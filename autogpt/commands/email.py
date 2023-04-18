@@ -40,7 +40,7 @@ def send_email(recipient: str, subject: str, message: str) -> str:
         smtp.login(sender, sender_pwd)
         smtp.send_message(msg)
 
-def read_emails(imap_folder: str = "inbox", imap_search_command: str = "ALL") -> str:
+def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
     """Read emails
 
     Args:
@@ -62,61 +62,35 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "ALL") ->
 
     messages = []
     for num in search_data[0].split():
-        _, msg_data = mail.fetch(num, "(RFC822)")
+        if CFG.email_mark_as_read:
+            _, msg_data = mail.fetch(num, "(BODY.PEEK[])")
+        else:
+            _, msg_data = mail.fetch(num, "(RFC822)")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
+
                 subject, encoding = decode_header(msg["Subject"])[0]
                 if isinstance(subject, bytes):
                     subject = subject.decode(encoding)
+
                 body = get_email_body(msg)
-                messages.append((subject, body))
+                from_address = msg["From"]
+                to_address = msg["To"]
+                date = msg["Date"]
+                cc = msg["CC"] if msg["CC"] else ""
+
+                messages.append({
+                    "From": from_address,
+                    "To": to_address,
+                    "Date": date,
+                    "CC": cc,
+                    "Subject": subject,
+                    "Message Body": body
+                })
 
     mail.logout()
     return messages
-
-
-
-
-
-
-def read_emails(email_address: str, password: str, imap_server: str = "imap.gmail.com", folder: str = "inbox", filter_by: str = "ALL") -> List[Tuple[str, str]]:
-
-
-
-def get_email_body(msg: email.message.Message) -> str:
-    if msg.is_multipart():
-        for part in msg.walk():
-            content_type = part.get_content_type()
-            content_disposition = str(part.get("Content-Disposition"))
-            if content_type == "text/plain" and "attachment" not in content_disposition:
-                return part.get_payload(decode=True).decode()
-    else:
-        return msg.get_payload(decode=True).decode()
-
-
-
-def read_emails(email_address: str, password: str, imap_server: str = "imap.gmail.com", folder: str = "inbox", filter_by: str = "ALL") -> List[Dict[str, str]]:
-    mail = imaplib.IMAP4_SSL(imap_server)
-    mail.login(email_address, password)
-    mail.select(folder)
-    _, search_data = mail.search(None, filter_by)
-
-    messages = []
-    for num in search_data[0].split():
-        _, msg_data = mail.fetch(num, "(RFC822)")
-        for response_part in msg_data:
-            if isinstance(response_part, tuple):
-                msg = email.message_from_bytes(response_part[1])
-                subject, encoding = decode_header(msg["Subject"])[0]
-                if isinstance(subject, bytes):
-                    subject = subject.decode(encoding)
-                body = get_email_body(msg)
-                messages.append({"subject": subject, "body": body})
-
-    mail.logout()
-    return messages
-
 
 def get_email_body(msg: email.message.Message) -> str:
     if msg.is_multipart():
