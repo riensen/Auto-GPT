@@ -23,7 +23,6 @@ from autogpt.commands.git_operations import clone_repository
 from autogpt.commands.google_search import google_official_search, google_search
 from autogpt.commands.image_gen import generate_image
 from autogpt.commands.improve_code import improve_code
-from autogpt.commands.twitter import send_tweet
 from autogpt.commands.web_requests import scrape_links, scrape_text
 from autogpt.commands.web_selenium import browse_website
 from autogpt.commands.write_tests import write_tests

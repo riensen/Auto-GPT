@@ -119,7 +119,6 @@ def main(
         command_registry.import_commands("autogpt.commands.git_operations")
         command_registry.import_commands("autogpt.commands.google_search")
         command_registry.import_commands("autogpt.commands.image_gen")
-        command_registry.import_commands("autogpt.commands.twitter")
         command_registry.import_commands("autogpt.commands.web_selenium")
         command_registry.import_commands("autogpt.commands.write_tests")
         command_registry.import_commands("autogpt.app")
